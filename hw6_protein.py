@@ -8,6 +8,7 @@ from itertools import count
 from random import randrange
 from re import A
 import re
+from tkinter import Label
 from typing import final
 import hw6_protein_tests as test
 
@@ -306,7 +307,18 @@ Parameters: list of strs ; 2D list of values
 Returns: list of strs
 '''
 def makeEdgeList(labels, biggestDiffs):
-    return
+    color = []
+    allwords = []
+    for label in labels:
+        for i in biggestDiffs:
+            A=i[0]
+            allwords.append(A)
+        if label in allwords:
+            color.append("black")
+        elif label not in allwords:
+            color.append("white")
+    return color
+
 
 
 '''
