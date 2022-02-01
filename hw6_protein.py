@@ -17,8 +17,12 @@ Parameters: str
 Returns: str
 '''
 def readFile(filename):
-    return
-
+    f = open(filename,'r')
+    Lines = f.readlines()
+    text=''
+    for i in Lines:
+        text=text+i.strip("\n")
+    return text
 
 '''
 dnaToRna(dna, startIndex)
@@ -27,7 +31,28 @@ Parameters: str ; int
 Returns: list of strs
 '''
 def dnaToRna(dna, startIndex):
-    return
+    dna1=dna[startIndex:]
+    dna1=dna1[:int(len(dna1)/3)*3]
+    dna1=dna1.replace("T", "U")
+    sent=''
+    codons=[]
+    for i in range(len(dna1)):
+        sent=sent+dna1[i]
+        if len(sent)==3:
+            codons.append(sent)
+            sent=''
+    Final=[]
+    list=["UAA","UAG","UGA"]
+    for i in range(len(codons)):
+        if i <= 2:
+            Final.append(codons[i])
+        elif i >= 3:
+            if codons[i] in list:
+                Final.append(codons[i])
+                break
+            elif codons[i] not in list:
+                Final.append(codons[i])
+    return Final
 
 
 '''
@@ -38,7 +63,16 @@ Returns: dict mapping strs to strs
 '''
 def makeCodonDictionary(filename):
     import json
-    return
+    f = open (filename, "r")
+    data = json.loads(f.read())
+    keysList = list(data.keys())
+    valuesList=list(data.values())
+    cdict={}
+    for i in range(len(valuesList)):
+        for j in range(len(valuesList[i])):
+
+            cdict[valuesList[i][j].replace("T", "U")]=keysList[i]
+    return cdict
 
 
 '''
@@ -48,7 +82,14 @@ Parameters: list of strs ; dict mapping strs to strs
 Returns: list of strs
 '''
 def generateProtein(codons, codonD):
-    return
+    rna=codons
+    list=[]
+    for keys in rna:
+        list.append(codonD[keys])
+    if rna[0] == "AUG":
+        list[0]="Start"
+ 
+    return list
 
 
 '''
