@@ -253,7 +253,11 @@ Parameters: 2D list of strs ; 2D list of strs
 Returns: list of strs
 '''
 def makeAminoAcidLabels(proteinList1, proteinList2):
-    return
+    list1=sum(proteinList1,[])
+    list2=sum(proteinList2,[])
+    list3=list(set(list1 + list2))
+    list3.sort()
+    return list3
 
 
 '''
