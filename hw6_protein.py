@@ -7,6 +7,7 @@ Roll Number:
 from itertools import count
 from random import randrange
 from re import A
+from typing import final
 import hw6_protein_tests as test
 
 project = "Protein" # don't edit this
@@ -169,8 +170,32 @@ Parameters: 2D list of strs ; 2D list of strs ; float
 Returns: 2D list of values
 '''
 def findAminoAcidDifferences(proteinList1, proteinList2, cutoff):
-    return
-
+    cmb1 = combineProteins(proteinList1) 
+    cmb2 = combineProteins(proteinList2)
+    total1 = len(cmb1)
+    total2 = len(cmb2)
+    prodict1=aminoAcidDictionary(cmb1)
+    prodict2=aminoAcidDictionary(cmb2)
+    cmb = list(set(cmb1 + cmb2))
+    final=[]
+    for i in cmb:
+        if i != "Start" and i != "Stop":
+            if i not in final:
+                if i in cmb1 and i in cmb2:
+                    freq1 = prodict1[i]/total1
+                    freq2 = prodict2[i]/total2
+                elif i in cmb1 and i not in cmb2:
+                    freq1 = prodict1[i]/total1
+                    freq2 = 0
+                elif i not in cmb1 and i in cmb2:
+                    freq1 = 0 
+                    freq2 = prodict2[i]/total2
+                freqdiff = abs(freq1-freq2)
+                if freqdiff > cutoff:
+                    list1=[i,freq1,freq2]
+                    final.append(list1)
+    return final
+    
 
 '''
 displayTextResults(commonalities, differences)
