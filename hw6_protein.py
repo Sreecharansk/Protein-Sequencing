@@ -159,7 +159,6 @@ def aminoAcidDictionary(aaList):
     dict={}
     for word in aaList:
         dict[word]= aaList.count(word)
-
     return dict
 
 
