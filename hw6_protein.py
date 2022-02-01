@@ -17,8 +17,12 @@ Parameters: str
 Returns: str
 '''
 def readFile(filename):
-    return
-
+    f = open(filename,'r')
+    Lines = f.readlines()
+    text=''
+    for i in Lines:
+        text=text+i.strip("\n")
+    return text
 
 '''
 dnaToRna(dna, startIndex)
@@ -27,7 +31,28 @@ Parameters: str ; int
 Returns: list of strs
 '''
 def dnaToRna(dna, startIndex):
-    return
+    dna1=dna[startIndex:]
+    dna1=dna1[:int(len(dna1)/3)*3]
+    dna1=dna1.replace("T", "U")
+    sent=''
+    condons=[]
+    for i in range(len(dna1)):
+        sent=sent+dna1[i]
+        if len(sent)==3:
+            condons.append(sent)
+            sent=''
+    Final=[]
+    list=["UAA","UAG","UGA"]
+    for i in range(len(condons)):
+        if i <= 2:
+            Final.append(condons[i])
+        elif i >= 3:
+            if condons[i] in list:
+                Final.append(condons[i])
+                break
+            elif condons[i] not in list:
+                Final.append(condons[i])
+    return Final
 
 
 '''
@@ -38,7 +63,17 @@ Returns: dict mapping strs to strs
 '''
 def makeCodonDictionary(filename):
     import json
-    return
+    f = open (filename, "r")
+    data = json.loads(f.read())
+    keysList = list(data.keys())
+    valuesList=list(data.values())
+
+    cdict={}
+    for i in range(len(valuesList)):
+        for j in range(len(valuesList[i])):
+
+            cdict[valuesList[i][j].replace("T", "U")]=keysList[i]
+    return cdict
 
 
 '''
