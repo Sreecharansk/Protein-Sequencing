@@ -4,6 +4,10 @@ Name:
 Roll Number:
 """
 
+from itertools import count
+from random import randrange
+from re import A
+from typing import final
 import hw6_protein_tests as test
 
 project = "Protein" # don't edit this
@@ -17,8 +21,12 @@ Parameters: str
 Returns: str
 '''
 def readFile(filename):
-    return
-
+    f = open(filename,'r')
+    Lines = f.readlines()
+    text=''
+    for i in Lines:
+        text=text+i.strip("\n")
+    return text
 
 '''
 dnaToRna(dna, startIndex)
@@ -27,7 +35,17 @@ Parameters: str ; int
 Returns: list of strs
 '''
 def dnaToRna(dna, startIndex):
-    return
+    condonlist = []
+    var = ["UGA","UAG","UAA"]
+    for word in range(startIndex,len(dna),3):
+        dna = dna.replace("T","U")
+        condon = dna[word:word+3]
+        if condon not in var:
+            condonlist.append(condon)
+        else:
+            condonlist.append(condon)
+            break
+    return condonlist
 
 
 '''
@@ -38,8 +56,19 @@ Returns: dict mapping strs to strs
 '''
 def makeCodonDictionary(filename):
     import json
-    return
 
+    f = open (filename, "r")
+    data = json.loads(f.read())
+    keysList = list(data.keys())
+    valuesList=list(data.values())
+    cdict={}
+    for i in range(len(valuesList)):
+        for j in range(len(valuesList[i])):
+
+            cdict[valuesList[i][j].replace("T", "U")]=keysList[i]
+    return cdict
+
+    
 
 '''
 generateProtein(codons, codonD)
@@ -48,7 +77,15 @@ Parameters: list of strs ; dict mapping strs to strs
 Returns: list of strs
 '''
 def generateProtein(codons, codonD):
-    return
+
+    rna=codons
+    list=[]
+    for keys in rna:
+        list.append(codonD[keys])
+    if rna[0] == "AUG":
+        list[0]="Start"
+    return list
+    
 
 
 '''
@@ -58,7 +95,23 @@ Parameters: str ; str
 Returns: 2D list of strs
 '''
 def synthesizeProteins(dnaFilename, codonFilename):
-    return
+    
+    dna=readFile(dnaFilename)
+    cd=makeCodonDictionary(codonFilename)
+    count=0 ## count unused bases
+    final=[]
+    k=0
+    while k < len(dna):
+        sent=dna[k:k+3]
+        if sent=="ATG":
+            A=dnaToRna(dna,k)
+            B=generateProtein(A,cd)
+            final.append(B)
+            k = k+3*len(A)
+        else:
+            count=count+1
+            k=k+1
+    return final
 
 
 def runWeek1():
@@ -77,7 +130,13 @@ Parameters: 2D list of strs ; 2D list of strs
 Returns: 2D list of strs
 '''
 def commonProteins(proteinList1, proteinList2):
-    return
+    common=[]
+    for i in range(len(proteinList1)):
+        A=proteinList1[i]
+        if A in proteinList2:
+            if A not in common:
+                common.append(A)
+    return common
 
 
 '''
@@ -87,7 +146,8 @@ Parameters: 2D list of strs
 Returns: list of strs
 '''
 def combineProteins(proteinList):
-    return
+    proteinList1=sum(proteinList,[])
+    return proteinList1
 
 
 '''
@@ -97,7 +157,10 @@ Parameters: list of strs
 Returns: dict mapping strs to ints
 '''
 def aminoAcidDictionary(aaList):
-    return
+    dict={}
+    for word in aaList:
+        dict[word]= aaList.count(word)
+    return dict
 
 
 '''
@@ -107,8 +170,32 @@ Parameters: 2D list of strs ; 2D list of strs ; float
 Returns: 2D list of values
 '''
 def findAminoAcidDifferences(proteinList1, proteinList2, cutoff):
-    return
-
+    cmb1 = combineProteins(proteinList1) 
+    cmb2 = combineProteins(proteinList2)
+    total1 = len(cmb1)
+    total2 = len(cmb2)
+    prodict1=aminoAcidDictionary(cmb1)
+    prodict2=aminoAcidDictionary(cmb2)
+    cmb = list(set(cmb1 + cmb2))
+    final=[]
+    for i in cmb:
+        if i != "Start" and i != "Stop":
+            if i not in final:
+                if i in cmb1 and i in cmb2:
+                    freq1 = prodict1[i]/total1
+                    freq2 = prodict2[i]/total2
+                elif i in cmb1 and i not in cmb2:
+                    freq1 = prodict1[i]/total1
+                    freq2 = 0
+                elif i not in cmb1 and i in cmb2:
+                    freq1 = 0 
+                    freq2 = prodict2[i]/total2
+                freqdiff = abs(freq1-freq2)
+                if freqdiff > cutoff:
+                    list1=[i,freq1,freq2]
+                    final.append(list1)
+    return final
+    
 
 '''
 displayTextResults(commonalities, differences)
@@ -192,12 +279,12 @@ if __name__ == "__main__":
     runWeek1()
 
     ## Uncomment these for Week 2 ##
-    """
+    
     print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
     test.week2Tests()
     print("\n" + "#"*15 + " WEEK 2 OUTPUT " + "#" * 15 + "\n")
     runWeek2()
-    """
+    
 
     ## Uncomment these for Week 3 ##
     """
