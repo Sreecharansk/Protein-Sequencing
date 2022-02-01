@@ -63,7 +63,17 @@ Returns: dict mapping strs to strs
 '''
 def makeCodonDictionary(filename):
     import json
-    return
+    f = open (filename, "r")
+    data = json.loads(f.read())
+    keysList = list(data.keys())
+    valuesList=list(data.values())
+
+    cdict={}
+    for i in range(len(valuesList)):
+        for j in range(len(valuesList[i])):
+
+            cdict[valuesList[i][j].replace("T", "U")]=keysList[i]
+    return cdict
 
 
 '''
