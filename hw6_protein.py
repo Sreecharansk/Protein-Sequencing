@@ -17,8 +17,12 @@ Parameters: str
 Returns: str
 '''
 def readFile(filename):
-    return
-
+    f = open(filename,'r')
+    Lines = f.readlines()
+    text=''
+    for i in Lines:
+        text=text+i.strip("\n")
+    return text
 
 '''
 dnaToRna(dna, startIndex)
@@ -27,7 +31,17 @@ Parameters: str ; int
 Returns: list of strs
 '''
 def dnaToRna(dna, startIndex):
-    return
+    condonlist = []
+    var = ["UGA","UAG","UAA"]
+    for word in range(startIndex,len(dna),3):
+        dna = dna.replace("T","U")
+        condon = dna[word:word+3]
+        if condon not in var:
+            condonlist.append(condon)
+        else:
+            condonlist.append(condon)
+            break
+    return condonlist
 
 
 '''
