@@ -31,7 +31,28 @@ Parameters: str ; int
 Returns: list of strs
 '''
 def dnaToRna(dna, startIndex):
-    return
+    dna1=dna[startIndex:]
+    dna1=dna1[:int(len(dna1)/3)*3]
+    dna1=dna1.replace("T", "U")
+    sent=''
+    condons=[]
+    for i in range(len(dna1)):
+        sent=sent+dna1[i]
+        if len(sent)==3:
+            condons.append(sent)
+            sent=''
+    Final=[]
+    list=["UAA","UAG","UGA"]
+    for i in range(len(condons)):
+        if i <= 2:
+            Final.append(condons[i])
+        elif i >= 3:
+            if condons[i] in list:
+                Final.append(condons[i])
+                break
+            elif condons[i] not in list:
+                Final.append(condons[i])
+    return Final
 
 
 '''
