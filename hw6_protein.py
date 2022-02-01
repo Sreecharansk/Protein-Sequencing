@@ -35,23 +35,23 @@ def dnaToRna(dna, startIndex):
     dna1=dna1[:int(len(dna1)/3)*3]
     dna1=dna1.replace("T", "U")
     sent=''
-    condons=[]
+    codons=[]
     for i in range(len(dna1)):
         sent=sent+dna1[i]
         if len(sent)==3:
-            condons.append(sent)
+            codons.append(sent)
             sent=''
     Final=[]
     list=["UAA","UAG","UGA"]
-    for i in range(len(condons)):
+    for i in range(len(codons)):
         if i <= 2:
-            Final.append(condons[i])
+            Final.append(codons[i])
         elif i >= 3:
-            if condons[i] in list:
-                Final.append(condons[i])
+            if codons[i] in list:
+                Final.append(codons[i])
                 break
-            elif condons[i] not in list:
-                Final.append(condons[i])
+            elif codons[i] not in list:
+                Final.append(codons[i])
     return Final
 
 
@@ -67,7 +67,6 @@ def makeCodonDictionary(filename):
     data = json.loads(f.read())
     keysList = list(data.keys())
     valuesList=list(data.values())
-
     cdict={}
     for i in range(len(valuesList)):
         for j in range(len(valuesList[i])):
@@ -83,7 +82,14 @@ Parameters: list of strs ; dict mapping strs to strs
 Returns: list of strs
 '''
 def generateProtein(codons, codonD):
-    return
+    rna=codons
+    list=[]
+    for keys in rna:
+        list.append(codonD[keys])
+    if rna[0] == "AUG":
+        list[0]="Start"
+ 
+    return list
 
 
 '''
